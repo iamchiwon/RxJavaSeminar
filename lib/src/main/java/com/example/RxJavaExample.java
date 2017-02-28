@@ -1,7 +1,6 @@
 package com.example;
 
-import rx.Observable;
-import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by iamchiwon on 2017. 2. 28..
@@ -10,31 +9,27 @@ import rx.schedulers.Schedulers;
 public class RxJavaExample {
     public static void main(String[] args) {
         //
-        // ObserveOn 과 SubscribeOn
-        Observable.range(0, 5)
-                .map(i -> {
-                    System.out.println("Map-1     : " + Thread.currentThread().getName());
-                    return i;
-                })
-                .observeOn(Schedulers.newThread())
-                .map(i -> {
-                    System.out.println("Map-2     : " + Thread.currentThread().getName());
-                    expensiveJob(i);
-                    return i;
-                })
-                .observeOn(Schedulers.io())
-//                .subscribeOn(Schedulers.computation())
-                .subscribe(s -> {
-                    System.out.println("Subscribe : " + Thread.currentThread().getName());
-                });
+        // Subject 는 Observable 이면서 Observer
+        PublishSubject<String> subject = PublishSubject.create();
+
+        //
+        // Subject 는 Observable 이니까 subscribe 가능
+        subject.subscribe(s -> System.out.println(s));
+
+        //
+        // 두개의 Thread에서 각각 별도로 이벤트 발생
+        new Thread(() -> {
+            sleep(1000);
+            subject.onNext("1 second later");
+        }).start();
+
+        new Thread(() -> {
+            sleep(2000);
+            subject.onNext("2 second later");
+        }).start();
 
         System.out.println("All Done");
-        sleep(6000);
-    }
-
-    public static void expensiveJob(Integer job) {
-        System.out.println("Expensive Job" + job);
-        sleep(1000);
+        sleep(3000);
     }
 
     private static void sleep(int ms) {
