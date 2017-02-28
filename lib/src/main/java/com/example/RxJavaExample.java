@@ -9,35 +9,32 @@ import rx.schedulers.Schedulers;
 
 public class RxJavaExample {
     public static void main(String[] args) {
-        String[] pokemons = new String[]{"피카츄", "라이츄", "파이리", "꼬부"};
-
-        System.out.println("Current Thread : " + Thread.currentThread().getName());
-
-        System.out.println("\n1. 그냥 사용");
-        Observable.range(0, 3).subscribe(i -> {
-//            System.out.println("Current Thread : " + Thread.currentThread().getName());
-            expensiveJob(i);
-        });
-
-        System.out.println("\n2. ObserveOn 사용");
-        Observable.range(100, 3).observeOn(Schedulers.newThread()).subscribe(i -> {
-//            System.out.println("Current Thread : " + Thread.currentThread().getName());
-            expensiveJob(i);
-        });
-
-//        Observable.range(200, 3).observeOn(Schedulers.newThread()).subscribe(i -> {
-//            System.out.println("Current Thread : " + Thread.currentThread().getName());
-//            expensiveJob(i);
-//        });
+        //
+        // ObserveOn 과 SubscribeOn
+        Observable.range(0, 5)
+                .map(i -> {
+                    System.out.println("Map-1     : " + Thread.currentThread().getName());
+                    return i;
+                })
+                .observeOn(Schedulers.newThread())
+                .map(i -> {
+                    System.out.println("Map-2     : " + Thread.currentThread().getName());
+                    expensiveJob(i);
+                    return i;
+                })
+                .observeOn(Schedulers.io())
+//                .subscribeOn(Schedulers.computation())
+                .subscribe(s -> {
+                    System.out.println("Subscribe : " + Thread.currentThread().getName());
+                });
 
         System.out.println("All Done");
-        sleep(4000);
+        sleep(6000);
     }
 
     public static void expensiveJob(Integer job) {
-        System.out.println("Expensive Job" + job + " - Start");
+        System.out.println("Expensive Job" + job);
         sleep(1000);
-        System.out.println("Expensive Job" + job + " - End");
     }
 
     private static void sleep(int ms) {
