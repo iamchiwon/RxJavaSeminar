@@ -52,8 +52,6 @@
 - [What's different in 2.0](https://github.com/ReactiveX/RxJava/wiki/What's-different-in-2.0)
   ( [번역본](http://realignist.me/code/2017/01/25/rxjava2-changelog.html) )
 - package : io.reactivex
-- null 처리 안함 => 그러니까 Single, Completable, Maybe 등을 사용해라
-- backpressure 없음 => 그러니까 Flowable과 Observable 을 필요에 따라 나눠서 사용해라
-- Subject는 Observable용이고 Flowable은 Processor를 사용해라
+- Flowable, Single, Completable, Maybe 등 추가 => 용도에 맞는 스트림을 사용할 것
 - Java8 네이밍 센스에 맞췄음
 - 기타등등
