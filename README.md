@@ -16,6 +16,44 @@
 
 ### 2. 본 편
 
-1. RxJava
+0. Reactive Extension
+
+- [ReactiveX](http://reactivex.io/)
+
+1. RxJava (v1.x)
+
+- [RxJava](https://github.com/ReactiveX/RxJava)
+- a library for composing **asynchronous** and **event-based** programs using
+      **observable sequences** for the Java VM
+- [Gragle 정보 - RxJava 1.x](http://search.maven.org/#artifactdetails%7Cio.reactivex%7Crxjava%7C1.2.7%7Cjar)
+
 2. Android + RxJava
+
 3. Android + RxJava + RxBinding
+
+4. RxJava 2.x
+
+- [Gradle 정보 - RxJava 2.x](http://search.maven.org/#artifactdetails%7Cio.reactivex.rxjava2%7Crxjava%7C2.0.6%7Cjar)
+
+----
+
+# Reference
+
+### Links
+
+- [[TD 2015] 반응형(Reactive) 응용프로그램 아키텍처](https://channel9.msdn.com/Events/TechDays/TDK2015/T3-6)
+- [RxJava 1.x Javadoc](http://reactivex.io/RxJava/1.x/javadoc/)
+- [RxJava 2.x Javadoc](http://reactivex.io/RxJava/2.x/javadoc/)
+- [RxAndroid](https://github.com/ReactiveX/RxAndroid)
+- [RxMarbles](http://rxmarbles.com/)
+
+### RxJava 2.x
+
+- [What's different in 2.0](https://github.com/ReactiveX/RxJava/wiki/What's-different-in-2.0)
+  ( [번역본](http://realignist.me/code/2017/01/25/rxjava2-changelog.html) )
+- package : io.reactivex
+- null 처리 안함 => 그러니까 Single, Completable, Maybe 등을 사용해라
+- backpressure 없음 => 그러니까 Flowable과 Observable 을 필요에 따라 나눠서 사용해라
+- Subject는 Observable용이고 Flowable은 Processor를 사용해라
+- Java8 네이밍 센스에 맞췄음
+- 기타등등
