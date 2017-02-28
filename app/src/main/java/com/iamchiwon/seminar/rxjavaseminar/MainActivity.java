@@ -1,47 +1,47 @@
 package com.iamchiwon.seminar.rxjavaseminar;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Button;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
-import com.iamchiwon.seminar.rxjavaseminar.rxcomponent.RxButton;
 import com.iamchiwon.seminar.rxjavaseminar.rxcomponent.RxButtonWrapper;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import rx.Subscription;
+import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button button;
-    RxButton rxButton;
+    Subscription eventCapturer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final RxButtonWrapper rxButtonWrapper = new RxButtonWrapper(this, R.id.rxwrapped_button);
+
         //
-        // 1. 일반 버튼
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(v -> {
-            Log.d("RxSeminar", "Button Clicked");
+        // RxButton 이벤트 처리
+        final Action1<View> action = v -> Log.d("RxSeminar", "Button Clicked");
+        eventCapturer = rxButtonWrapper.rxClick().subscribe(action);
+
+        //
+        // Switch 이벤트 처리
+        Switch eventSwitch = (Switch) findViewById(R.id.event_switch);
+        eventSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    eventCapturer = rxButtonWrapper.rxClick().subscribe(action);
+
+                } else {
+                    eventCapturer.unsubscribe();
+
+                }
+            }
         });
-
-        //
-        // 2. 상속받아 만든 Rx 버튼
-        rxButton = (RxButton) findViewById(R.id.rxbutton);
-        rxButton.rxClick()
-                .subscribe(v -> {
-                    Log.d("RxSeminar", "RX Button Clicked");
-                });
-
-        //
-        // 3. 버튼을 Rx로 Wrapping 한 클래스
-        new RxButtonWrapper(this, R.id.rxwrapped_button)
-                .rxClick()
-                .subscribe(v -> {
-                    Log.d("RxSeminar", "RX Wrapped Button Clicked");
-                });
     }
 }
