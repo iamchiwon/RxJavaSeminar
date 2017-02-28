@@ -3,8 +3,9 @@ package com.iamchiwon.seminar.rxjavaseminar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
 import android.widget.TextView;
+
+import com.iamchiwon.seminar.rxjavaseminar.rxcomponent.RxButtonWrapper;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,8 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         pollingCountTextView = (TextView) findViewById(R.id.polling_count);
 
-        Button secondButton = (Button) findViewById(R.id.show_second);
-        secondButton.setOnClickListener(v -> {
+        new RxButtonWrapper(this, R.id.show_second).rxClick().subscribe(v -> {
             startActivity(new Intent(this, SecondActivity.class));
         });
     }

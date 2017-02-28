@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.concurrent.TimeUnit;
+
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -17,7 +21,7 @@ public class RxButtonWrapper {
     PublishSubject<View> clickObserver;
 
     public RxButtonWrapper(Activity activity, int id) {
-        button= (Button)activity.findViewById(id);
+        button = (Button) activity.findViewById(id);
         rxInit();
     }
 
@@ -27,7 +31,9 @@ public class RxButtonWrapper {
     }
 
     public Observable<View> rxClick() {
-        return clickObserver;
+        return clickObserver.subscribeOn(Schedulers.computation())
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 }
