@@ -20,6 +20,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+
 public class MainActivity extends AppCompatActivity {
 
     enum PasswordCheckResult {
