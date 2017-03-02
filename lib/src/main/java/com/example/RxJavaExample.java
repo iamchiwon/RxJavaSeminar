@@ -1,6 +1,12 @@
 package com.example;
 
-import rx.subjects.PublishSubject;
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by iamchiwon on 2017. 2. 28..
@@ -8,28 +14,39 @@ import rx.subjects.PublishSubject;
 
 public class RxJavaExample {
     public static void main(String[] args) {
-        //
-        // Subject 는 Observable 이면서 Observer
-        PublishSubject<String> subject = PublishSubject.create();
+        String[] arr = new String[]{"Hello", "World", "Bye"};
 
-        //
-        // Subject 는 Observable 이니까 subscribe 가능
-        subject.subscribe(s -> System.out.println(s));
+        System.out.println("\nFlowable");
+        Flowable.fromArray(arr).subscribe(s -> System.out.println(s));
 
-        //
-        // 두개의 Thread에서 각각 별도로 이벤트 발생
-        new Thread(() -> {
-            sleep(1000);
-            subject.onNext("1 second later");
-        }).start();
+        System.out.println("\nObservable");
+        Observable.fromArray(arr).subscribe(s -> System.out.println(s));
 
-        new Thread(() -> {
-            sleep(2000);
-            subject.onNext("2 second later");
-        }).start();
+        System.out.println("\nSingle");
+        Single.just(arr).subscribe(s -> System.out.println(s));
 
-        System.out.println("All Done");
-        sleep(3000);
+        System.out.println("\nCompletable");
+        Completable.complete().subscribe(() -> {
+            System.out.println("complete");
+        }, error -> {
+            System.out.println("error");
+        });
+
+        System.out.println("\nMaybe");
+        Maybe.just(arr).subscribe(s -> System.out.println(s));
+
+
+        System.out.println("\nDisposable");
+        Disposable disposable = Flowable
+                .fromArray(arr)
+                .observeOn(Schedulers.io())
+                .doOnNext(s -> {
+                    sleep(500);
+                })
+                .subscribe(s -> System.out.println(s));
+
+        sleep(1100);
+        disposable.dispose();
     }
 
     private static void sleep(int ms) {
