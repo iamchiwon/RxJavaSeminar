@@ -11,15 +11,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.iamchiwon.seminar.rxjavaseminar.MainActivity">
 
-    <TextView
-        android:id="@+id/polling_count"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/input_field"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Polling-0"/>
+        android:hint="Input Number (1~100)"/>
 
-    <Button
-        android:id="@+id/show_second"
+    <TextView
+        android:id="@+id/valid_result"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Second" />
+        android:layout_height="wrap_content" />
 </LinearLayout>
