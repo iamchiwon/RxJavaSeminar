@@ -4,14 +4,21 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         EditText password = (EditText) findViewById(R.id.password_field);
         EditText reinput = (EditText) findViewById(R.id.reinput_field);
         Button submit = (Button) findViewById(R.id.submit_button);
+
 
         Observable<String> passwordObservable =
                 RxTextView.textChanges(password).map(chseq -> chseq.toString());
@@ -69,5 +77,57 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .map(check -> check == PasswordCheckResult.Equal)
                 .subscribe(RxView.enabled(submit));
+
+
+        RxView.clicks(submit).subscribe(v -> doLogin());
+    }
+
+    private void doLogin() {
+        EditText password = (EditText) findViewById(R.id.password_field);
+        TextView resultText = (TextView) findViewById(R.id.valid_result);
+        Button submit = (Button) findViewById(R.id.submit_button);
+        ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
+
+        String pass = password.getText().toString();
+
+        Observable.just(pass)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(pw -> {
+                    submit.setEnabled(false);
+                    progress.setVisibility(View.VISIBLE);
+                })
+                .observeOn(Schedulers.io())
+                .map(pw -> networkJob(pw))
+                .timeout(1, TimeUnit.SECONDS)
+                .retry(3)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    if (result) {
+                        resultText.setTextColor(Color.BLACK);
+                        resultText.setText("Logged in");
+                    } else {
+                        resultText.setTextColor(Color.BLACK);
+                        resultText.setText("Login fail");
+                    }
+                    submit.setEnabled(true);
+                    progress.setVisibility(View.GONE);
+                }, e -> {
+                    resultText.setTextColor(Color.BLACK);
+                    resultText.setText("Time out");
+                    submit.setEnabled(true);
+                    progress.setVisibility(View.GONE);
+                });
+    }
+
+    private boolean networkJob(String pass) {
+        try {
+            int r = new Random().nextInt(5);
+            Thread.sleep(r * 1_000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if (pass.equals("1234567")) return true;
+        return false;
     }
 }

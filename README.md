@@ -29,7 +29,11 @@
 
 2. Android + RxJava
 
+- [RxAndroid](https://github.com/ReactiveX/RxAndroid)
+
 3. Android + RxJava + RxBinding
+
+- [RxBinding](https://github.com/JakeWharton/RxBinding)
 
 4. RxJava 2.x
 
@@ -44,7 +48,6 @@
 - [[TD 2015] 반응형(Reactive) 응용프로그램 아키텍처](https://channel9.msdn.com/Events/TechDays/TDK2015/T3-6)
 - [RxJava 1.x Javadoc](http://reactivex.io/RxJava/1.x/javadoc/)
 - [RxJava 2.x Javadoc](http://reactivex.io/RxJava/2.x/javadoc/)
-- [RxAndroid](https://github.com/ReactiveX/RxAndroid)
 - [RxMarbles](http://rxmarbles.com/)
 
 ### RxJava 2.x
