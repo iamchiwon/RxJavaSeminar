@@ -38,6 +38,7 @@
 - RxJava 2.x
 
     - [Gradle 정보 - RxJava 2.x](http://search.maven.org/#artifactdetails%7Cio.reactivex.rxjava2%7Crxjava%7C2.0.6%7Cjar)
+    - [RxJava2Interop](https://github.com/akarnokd/RxJava2Interop)
 
 ----
 

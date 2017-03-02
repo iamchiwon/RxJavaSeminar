@@ -16,9 +16,11 @@ import com.jakewharton.rxbinding.widget.RxTextView;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,24 +43,27 @@ public class MainActivity extends AppCompatActivity {
         Button submit = (Button) findViewById(R.id.submit_button);
 
 
-        Observable<String> passwordObservable =
-                RxTextView.textChanges(password).map(chseq -> chseq.toString());
+        Flowable<String> passwordObservable =
+                RxJavaInterop.toV2Flowable(
+                        RxTextView.textChanges(password).map(chseq -> chseq.toString())
+                );
 
-        Observable<String> reinputObservable =
-                RxTextView.textChanges(reinput).map(chseq -> chseq.toString());
+        Flowable<String> reinputObservable =
+                RxJavaInterop.toV2Flowable(
+                        RxTextView.textChanges(reinput).map(chseq -> chseq.toString())
+                );
 
-        Observable
-                .combineLatest(passwordObservable
-                        , reinputObservable
-                        , (pass, repass) -> {
-                            if (TextUtils.isEmpty(pass)) return PasswordCheckResult.Empty;
-                            if (pass.length() < 6) return PasswordCheckResult.Short;
+        Flowable.combineLatest(passwordObservable
+                , reinputObservable
+                , (pass, repass) -> {
+                    if (TextUtils.isEmpty(pass)) return PasswordCheckResult.Empty;
+                    if (pass.length() < 6) return PasswordCheckResult.Short;
 
-                            if (TextUtils.isEmpty(repass)) return PasswordCheckResult.Empty;
+                    if (TextUtils.isEmpty(repass)) return PasswordCheckResult.Empty;
 
-                            if (pass.equals(repass)) return PasswordCheckResult.Equal;
-                            return PasswordCheckResult.NotEqual;
-                        })
+                    if (pass.equals(repass)) return PasswordCheckResult.Equal;
+                    return PasswordCheckResult.NotEqual;
+                })
                 .doOnNext(check -> {
                     if (check == PasswordCheckResult.Equal) {
                         resultText.setText("Valid");
@@ -77,10 +82,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .map(check -> check == PasswordCheckResult.Equal)
-                .subscribe(RxView.enabled(submit));
+                .subscribe(b ->
+                        RxView.enabled(submit).call(b)
+                );
 
 
-        RxView.clicks(submit).subscribe(v -> doLogin());
+        RxJavaInterop.toV2Flowable(
+                RxView.clicks(submit).map(v -> submit)
+        ).subscribe(v -> doLogin());
     }
 
     private void doLogin() {
@@ -91,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
 
         String pass = password.getText().toString();
 
-        Observable.just(pass)
+        Single.just(pass)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(pw -> {
+                .doOnSuccess(pw -> {
                     submit.setEnabled(false);
                     progress.setVisibility(View.VISIBLE);
                 })
