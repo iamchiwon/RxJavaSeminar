@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.iamchiwon.seminar.rxjavaseminar.rxcomponent.RxButtonWrapper;
+import com.jakewharton.rxbinding.view.RxView;
 
 import java.util.concurrent.TimeUnit;
 
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         pollingCountTextView = (TextView) findViewById(R.id.polling_count);
 
-        new RxButtonWrapper(this, R.id.show_second).rxClick().subscribe(v -> {
+        RxView.clicks(findViewById(R.id.show_second)).subscribe(v -> {
             startActivity(new Intent(this, SecondActivity.class));
         });
     }
