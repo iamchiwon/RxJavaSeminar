@@ -59,3 +59,5 @@
     - Flowable, Single, Completable, Maybe 등 추가 => 용도에 맞는 스트림을 사용할 것
     - Java8 네이밍 센스에 맞췄음
     - 기타등등
+
+- ***이 레파지토리는 예제소스가 누적되지 않고 commit에 따라 달라지니, commit 히스토리를 보셔야 합니다.***
