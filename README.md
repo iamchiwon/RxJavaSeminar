@@ -47,6 +47,7 @@
 - Links
 
     - [[TD 2015] 반응형(Reactive) 응용프로그램 아키텍처](https://channel9.msdn.com/Events/TechDays/TDK2015/T3-6)
+    - [How to Think, in RxJava, Before Reacting](https://vimeo.com/170796165)
     - [RxJava 1.x Javadoc](http://reactivex.io/RxJava/1.x/javadoc/)
     - [RxJava 2.x Javadoc](http://reactivex.io/RxJava/2.x/javadoc/)
     - [RxMarbles](http://rxmarbles.com/)
